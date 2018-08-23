@@ -4,8 +4,8 @@ apt-get -qq -y update
 apt-get -qq -y upgrade
 
 export DEBIAN_FRONTEND=noninteractive
-debconf-set-selections <<< 'mariadb-server-10.0 mysql-server/root_password password #MYSQL_ROOT_PASSWORD#'
-debconf-set-selections <<< 'mariadb-server-10.0 mysql-server/root_password_again password #MYSQL_ROOT_PASSWORD#'
+debconf-set-selections <<< 'mariadb-server-10.0 mysql-server/root_password password #MYSQL_ROOT_PASSWORD'
+debconf-set-selections <<< 'mariadb-server-10.0 mysql-server/root_password_again password #MYSQL_ROOT_PASSWORD'
 apt-get install -y -q mariadb-server
 
 sed -i 's/MATTERMOST_PASSWORD/#MATTERMOST_PASSWORD/' /vagrant/db_setup.sql
@@ -14,7 +14,7 @@ mysql -uroot -p#MYSQL_ROOT_PASSWORD < /vagrant/db_setup.sql
 
 rm -rf /opt/mattermost
 
-wget --quiet https://releases.mattermost.com/5.1.0/mattermost-5.1.0-linux-amd64.tar.gz
+wget --quiet https://releases.mattermost.com/5.2.0/mattermost-5.2.0-linux-amd64.tar.gz
 
 tar -xzf mattermost*.gz
 
