@@ -171,7 +171,7 @@
         "FeedbackOrganization": "© 3001 Planet Express Inc, W 57th and Henry Hudson Parkway, Manhattan, New New York, United States, Earth, Sol System, Milky Way, Universe A",
         "EnableSMTPAuth": true,
         "SMTPUsername": "mattermost@movetoiceland.com",
-        "SMTPPassword": "\u00265m2Eg$8u#j7",
+        "SMTPPassword": "",
         "SMTPServer": "smtp.gmail.com",
         "SMTPPort": "465",
         "ConnectionSecurity": "TLS",

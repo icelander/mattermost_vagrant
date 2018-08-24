@@ -1,7 +1,7 @@
 #!/bin/bash
 
-apt-get -q -y update
-apt-get -q -y upgrade
+apt-get -qq update > /dev/null
+apt-get -qq upgrade > /dev/null
 
 apt-get install -y -q postgresql postgresql-contrib
 
