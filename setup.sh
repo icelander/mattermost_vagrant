@@ -22,21 +22,21 @@ su postgres -c "psql -f /tmp/db_setup.sql"
 rm /tmp/db_setup.sql
 
 rm -rf /opt/mattermost
-
+echo "Downloading Mattermost"
 wget --quiet https://releases.mattermost.com/5.2.1/mattermost-5.2.1-linux-amd64.tar.gz
-
+echo "Unzipping Mattermost"
 tar -xzf mattermost*.gz
 
 rm mattermost*.gz
 mv mattermost /opt
 
 mkdir /opt/mattermost/data
-
+echo "Creating Mattermost User"
 useradd --system --user-group mattermost
 chown -R mattermost:mattermost /opt/mattermost
 
 chmod -R g+w /opt/mattermost
-
+echo "Copying Config File"
 # "mmuser:mostest@tcp(dockerhost:3306)/mattermost_test?charset=utf8mb4,utf8&readTimeout=30s&writeTimeout=30s",
 cp /vagrant/config.json /opt/mattermost/config/config.json
 sed -i -e 's/mostest/#MATTERMOST_PASSWORD/g' /opt/mattermost/config/config.json
@@ -44,5 +44,7 @@ sed -i -e 's/mostest/#MATTERMOST_PASSWORD/g' /opt/mattermost/config/config.json
 cp /vagrant/mattermost.service /lib/systemd/system/mattermost.service
 systemctl daemon-reload
 
+echo "Starting PostgreSQL"
 service postgresql start
+echo "Starting Mattermost!"
 service mattermost start
