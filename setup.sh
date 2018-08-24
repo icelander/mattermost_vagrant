@@ -1,16 +1,23 @@
 #!/bin/bash
 
-apt-get -qq -y update
-apt-get -qq -y upgrade
+apt-get -q -y update
+apt-get -q -y upgrade
 
-export DEBIAN_FRONTEND=noninteractive
-debconf-set-selections <<< 'mariadb-server-10.0 mysql-server/root_password password #MYSQL_ROOT_PASSWORD'
-debconf-set-selections <<< 'mariadb-server-10.0 mysql-server/root_password_again password #MYSQL_ROOT_PASSWORD'
-apt-get install -y -q mariadb-server
+apt-get install -y -q postgresql postgresql-contrib
+
+
+# sudo su postgres -c "createdb -E UTF8 -T template0 --locale=en_US.utf8 -O vagrant wtm"
+cp /etc/postgresql/9.5/main/pg_hba.conf /etc/postgresql/9.5/main/pg_hba.orig.conf
+cp /vagrant/pg_hba.conf /etc/postgresql/9.5/main/pg_hba.conf
+
+cp /etc/postgresql/9.5/main/postgresql.conf /etc/postgresql/9.5/main/postgresql.orig.conf
+cp /vagrant/postgresql.conf /etc/postgresql/9.5/main/postgresql.conf
+
+sudo systemctl reload postgresql
 
 sed -i 's/MATTERMOST_PASSWORD/#MATTERMOST_PASSWORD/' /vagrant/db_setup.sql
 echo "Setting up database"
-mysql -uroot -p#MYSQL_ROOT_PASSWORD < /vagrant/db_setup.sql
+su postgres -c "psql -f /vagrant/db_setup.sql"
 
 rm -rf /opt/mattermost
 
