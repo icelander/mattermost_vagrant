@@ -14,7 +14,7 @@ mysql -uroot -p#MYSQL_ROOT_PASSWORD < /vagrant/db_setup.sql
 
 rm -rf /opt/mattermost
 
-wget --quiet https://releases.mattermost.com/5.2.0/mattermost-5.2.0-linux-amd64.tar.gz
+wget --quiet https://releases.mattermost.com/5.2.1/mattermost-5.2.1-linux-amd64.tar.gz
 
 tar -xzf mattermost*.gz
 
