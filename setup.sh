@@ -15,9 +15,11 @@ cp /vagrant/postgresql.conf /etc/postgresql/9.5/main/postgresql.conf
 
 sudo systemctl reload postgresql
 
-sed -i 's/MATTERMOST_PASSWORD/#MATTERMOST_PASSWORD/' /vagrant/db_setup.sql
+cp /vagrant/db_setup.sql /tmp/db_setup.sql
+sed -i 's/MATTERMOST_PASSWORD/#MATTERMOST_PASSWORD/' /tmp/db_setup.sql
 echo "Setting up database"
-su postgres -c "psql -f /vagrant/db_setup.sql"
+su postgres -c "psql -f /tmp/db_setup.sql"
+rm /tmp/db_setup.sql
 
 rm -rf /opt/mattermost
 
@@ -36,12 +38,11 @@ chown -R mattermost:mattermost /opt/mattermost
 chmod -R g+w /opt/mattermost
 
 # "mmuser:mostest@tcp(dockerhost:3306)/mattermost_test?charset=utf8mb4,utf8&readTimeout=30s&writeTimeout=30s",
-sed -i -e 's/dockerhost:3306/127.0.0.1:3306/g' /opt/mattermost/config/config.json
+cp /vagrant/config.json /opt/mattermost/config/config.json
 sed -i -e 's/mostest/#MATTERMOST_PASSWORD/g' /opt/mattermost/config/config.json
-sed -i -e 's/mattermost_test/mattermost/g' /opt/mattermost/config/config.json
 
 cp /vagrant/mattermost.service /lib/systemd/system/mattermost.service
 systemctl daemon-reload
 
-service mysql start
+service postgresql start
 service mattermost start
