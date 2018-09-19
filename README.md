@@ -1,10 +1,12 @@
-# Replicating Surname Change Issue
+# LDAP Sync - Unable to Change User's Display Name
+
+[Zendesk Ticket](https://mattermost.zendesk.com/agent/tickets/5877)
 
 ## Steps to Reproduce
 
 0. Install [Virtualbox] and [Vagrant]
 1. run `vagrant up` from this directory
-2. Go to [your new server] Try to log in with the username and password `fry`, then log out and log in with the username and password `admin`
+2. Go to [your new server] Try to log in with the username and password `fry`, then log out and log in with the username and password `admin` and create a new team
 3. Add the user `fry` to the Planet Express team
 4. Wonder why we don't make the only team the default team for LDAP users.
 5. Log out and log in with the username/password `fry`

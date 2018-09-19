@@ -105,10 +105,7 @@
         "ExperimentalHideTownSquareinLHS": false,
         "ExperimentalTownSquareIsReadOnly": false,
         "ExperimentalPrimaryTeam": "",
-        "ExperimentalDefaultChannels": [
-            "town-square",
-            "off-topic"
-        ]
+        "ExperimentalDefaultChannels": []
     },
     "ClientRequirements": {
         "AndroidLatestVersion": "",
@@ -276,10 +273,10 @@
         "FirstNameAttribute": "givenName",
         "LastNameAttribute": "sn",
         "EmailAttribute": "mail",
-        "UsernameAttribute": "uid",
+        "UsernameAttribute": "employeeType",
         "NicknameAttribute": "",
         "IdAttribute": "uid",
-        "PositionAttribute": "employeeType",
+        "PositionAttribute": "",
         "LoginIdAttribute": "uid",
         "SyncIntervalMinutes": 60,
         "SkipCertificateVerification": false,
