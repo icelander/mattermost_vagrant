@@ -23,7 +23,7 @@ rm /tmp/db_setup.sql
 
 rm -rf /opt/mattermost
 echo "Downloading Mattermost"
-wget --quiet https://releases.mattermost.com/5.2.1/mattermost-5.2.1-linux-amd64.tar.gz
+wget --quiet https://releases.mattermost.com/5.4.0/mattermost-5.4.0-linux-amd64.tar.gz
 echo "Unzipping Mattermost"
 tar -xzf mattermost*.gz
 
