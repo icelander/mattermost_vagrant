@@ -1,7 +1,6 @@
 #!/bin/bash
 
 apt-get -q -y update
-apt-get -q -y upgrade
 
 # Sets the root password for MariaDB
 export DEBIAN_FRONTEND=noninteractive

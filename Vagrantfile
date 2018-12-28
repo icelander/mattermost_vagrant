@@ -6,7 +6,7 @@ MYSQL_ROOT_PASSWORD = 'mysql_root_password'
 MATTERMOST_PASSWORD = 'really_secure_password'
 
 Vagrant.configure("2") do |config|
-	config.vm.box = "bento/ubuntu-16.04"
+	config.vm.box = "bento/ubuntu-18.04"
 
 	config.vm.define 'nginx' do |box|
 		box.vm.hostname = 'nginx'
