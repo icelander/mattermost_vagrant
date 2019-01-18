@@ -1,4 +1,0 @@
-dn: cn=John A. Zoidberg,ou=people,dc=planetexpress,dc=com
-changetype: modify
-replace: uid
-uid: john

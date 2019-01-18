@@ -5,7 +5,9 @@ echo "Updating and Upgrading"
 apt-get -q -y update > /dev/null
 apt-get -q -y install jq
 echo "Downloading mattermost"
-wget --quiet https://releases.mattermost.com/5.5.1/mattermost-5.5.1-linux-amd64.tar.gz
+# wget --quiet https://releases.mattermost.com/5.5.1/mattermost-5.5.1-linux-amd64.tar.gz
+
+cp /vagrant/mattermost-5.2.0-linux-amd64.tar.gz ./
 echo "Extracting"
 tar -xzf mattermost*.gz
 
