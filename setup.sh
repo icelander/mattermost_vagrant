@@ -1,7 +1,6 @@
 #!/bin/bash
 
 apt-get -qq update > /dev/null
-apt-get -qq upgrade > /dev/null
 
 apt-get install -y -q postgresql postgresql-contrib
 
@@ -23,7 +22,7 @@ rm /tmp/db_setup.sql
 
 rm -rf /opt/mattermost
 echo "Downloading Mattermost"
-wget --quiet https://releases.mattermost.com/5.4.0/mattermost-5.4.0-linux-amd64.tar.gz
+cp /vagrant/mattermost-5.7.0-linux-amd64.tar.gz ./
 echo "Unzipping Mattermost"
 tar -xzf mattermost*.gz
 
@@ -37,12 +36,15 @@ chown -R mattermost:mattermost /opt/mattermost
 
 chmod -R g+w /opt/mattermost
 echo "Copying Config File"
-# "mmuser:mostest@tcp(dockerhost:3306)/mattermost_test?charset=utf8mb4,utf8&readTimeout=30s&writeTimeout=30s",
 cp /vagrant/config.json /opt/mattermost/config/config.json
 sed -i -e 's/mostest/#MATTERMOST_PASSWORD/g' /opt/mattermost/config/config.json
 
 cp /vagrant/mattermost.service /lib/systemd/system/mattermost.service
 systemctl daemon-reload
+
+cd /opt/mattermost
+bin/mattermost user create --email admin@planetexpress.com --username admin --password admin --system_admin
+bin/mattermost sampledata --seed 10 --teams 4 --users 30
 
 echo "Starting PostgreSQL"
 service postgresql start
