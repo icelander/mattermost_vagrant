@@ -15,7 +15,6 @@ cp /vagrant/postgresql.conf /etc/postgresql/9.5/main/postgresql.conf
 sudo systemctl reload postgresql
 
 cp /vagrant/db_setup.sql /tmp/db_setup.sql
-sed -i 's/MATTERMOST_PASSWORD/#MATTERMOST_PASSWORD/' /tmp/db_setup.sql
 echo "Setting up database"
 su postgres -c "psql -f /tmp/db_setup.sql"
 rm /tmp/db_setup.sql
@@ -30,16 +29,18 @@ rm mattermost*.gz
 mv mattermost /opt
 
 mkdir /opt/mattermost/data
+
+echo "Copying Config File"
+rm /opt/mattermost/config/config.json
+ln -s /vagrant/config.json /opt/mattermost/config/config.json
+ln -s /vagrant/license.txt /opt/mattermost/license.txt
+
 echo "Creating Mattermost User"
 useradd --system --user-group mattermost
 chown -R mattermost:mattermost /opt/mattermost
-
 chmod -R g+w /opt/mattermost
-echo "Copying Config File"
-cp /vagrant/config.json /opt/mattermost/config/config.json
-sed -i -e 's/mostest/#MATTERMOST_PASSWORD/g' /opt/mattermost/config/config.json
 
-cp /vagrant/mattermost.service /lib/systemd/system/mattermost.service
+ln -s /vagrant/mattermost.service /lib/systemd/system/mattermost.service
 systemctl daemon-reload
 
 cd /opt/mattermost

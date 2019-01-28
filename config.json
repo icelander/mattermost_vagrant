@@ -2,7 +2,7 @@
     "ServiceSettings": {
         "SiteURL": "http://127.0.0.1:8065",
         "WebsocketURL": "",
-        "LicenseFileLocation": "",
+        "LicenseFileLocation": "/opt/mattermost/license.txt",
         "ListenAddress": ":8065",
         "ConnectionSecurity": "",
         "TLSCertFile": "",
@@ -102,7 +102,7 @@
     },
     "SqlSettings": {
         "DriverName": "postgres",
-        "DataSource": "postgres://mmuser:mostest@127.0.0.1:5432/mattermost?sslmode=disable&connect_timeout=10",
+        "DataSource": "postgres://mmuser:really_secure_password@127.0.0.1:5432/mattermost?sslmode=disable&connect_timeout=10",
         "DataSourceReplicas": [],
         "DataSourceSearchReplicas": [],
         "MaxIdleConns": 20,
