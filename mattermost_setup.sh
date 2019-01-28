@@ -7,7 +7,10 @@ apt-get -q -y install jq
 echo "Downloading mattermost"
 # wget --quiet https://releases.mattermost.com/5.5.1/mattermost-5.5.1-linux-amd64.tar.gz
 
-cp /vagrant/mattermost-5.2.0-linux-amd64.tar.gz ./
+# TODO: Check if file exists and use that, otherwise download latest version
+# TODO: Specify version
+
+cp /vagrant/mattermost*.gz ./
 echo "Extracting"
 tar -xzf mattermost*.gz
 
