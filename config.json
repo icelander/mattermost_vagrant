@@ -34,7 +34,7 @@
         "AllowedUntrustedInternalConnections": "",
         "EnableMultifactorAuthentication": false,
         "EnforceMultifactorAuthentication": false,
-        "EnableUserAccessTokens": false,
+        "EnableUserAccessTokens": true,
         "AllowCorsFrom": "",
         "CorsExposedHeaders": "",
         "CorsAllowCredentials": false,
@@ -348,7 +348,7 @@
         "IdleConnTimeoutMilliseconds": 90000
     },
     "MetricsSettings": {
-        "Enable": false,
+        "Enable": true,
         "BlockProfileRate": 0,
         "ListenAddress": ":8067"
     },
