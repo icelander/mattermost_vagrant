@@ -1,8 +1,10 @@
 #!/bin/bash
 
+rm /vagrant/config.vagrant.json
+
 apt-get -qq update > /dev/null
 
-apt-get install -y -q postgresql postgresql-contrib
+apt-get install -y -q postgresql postgresql-contrib jq
 
 
 # sudo su postgres -c "createdb -E UTF8 -T template0 --locale=en_US.utf8 -O vagrant wtm"
@@ -31,8 +33,16 @@ mv mattermost /opt
 mkdir /opt/mattermost/data
 
 echo "Copying Config File"
-rm /opt/mattermost/config/config.json
-ln -s /vagrant/config.json /opt/mattermost/config/config.json
+cp /opt/mattermost/config/config.json /opt/mattermost/config/config.orig.json
+mv /opt/mattermost/config/config.json /vagrant/config.vagrant.json
+# Edit config file with JQ
+jq '.SqlSettings.DriverName = "postgres"' /vagrant/config.vagrant.json > /vagrant/config.vagrant.json.tmp && mv /vagrant/config.vagrant.json.tmp /vagrant/config.vagrant.json
+jq '.SqlSettings.DataSource = "postgres://mmuser:really_secure_password@127.0.0.1:5432/mattermost?sslmode=disable\u0026connect_timeout=10"' /vagrant/config.vagrant.json > /vagrant/config.vagrant.json.tmp && mv /vagrant/config.vagrant.json.tmp /vagrant/config.vagrant.json
+jq '.ServiceSettings.LicenseFileLocation = "/opt/mattermost/license.txt"' /vagrant/config.vagrant.json > /vagrant/config.vagrant.json.tmp && mv /vagrant/config.vagrant.json.tmp /vagrant/config.vagrant.json
+
+chmod 777 /vagrant/config.vagrant.json
+
+ln -s /vagrant/config.vagrant.json /opt/mattermost/config/config.json
 ln -s /vagrant/license.txt /opt/mattermost/license.txt
 
 echo "Creating Mattermost User"
