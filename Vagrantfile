@@ -14,9 +14,9 @@ Vagrant.configure("2") do |config|
 		box.vm.network "forwarded_port", guest: 3306, host: 23306, host_ip: "127.0.0.1"
 		box.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
 
-		setup_script = File.read('setup.sh')
+		# setup_script = File.read('setup.sh')
 
-		box.vm.provision :shell, inline: setup_script, run: 'once'
+		# box.vm.provision :shell, inline: setup_script, run: 'once'
 	end
 
 
@@ -28,12 +28,18 @@ Vagrant.configure("2") do |config|
 
 		config.vm.define box_hostname do |box|
 			box.vm.hostname = box_hostname
-			setup_script = File.read('mattermost_setup.sh')
 
-			setup_script.gsub! '#IP_ADDR', node_ip
+			if index == 0
+				setup_script = File.read('master_setup.sh')
+			else
+				setup_script = File.read('slave_setup.sh')	
+			end
+			
+
+			# setup_script.gsub! '#IP_ADDR', node_ip
 
 			box.vm.network :private_network, ip: node_ip
-			box.vm.provision :shell, inline: setup_script, run: 'once'
+			# box.vm.provision :shell, inline: setup_script, run: 'once'
 		end
 	end
 end
