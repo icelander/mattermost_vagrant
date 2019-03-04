@@ -23,7 +23,8 @@ rm /tmp/db_setup.sql
 
 rm -rf /opt/mattermost
 echo "Downloading Mattermost"
-cp /vagrant/mattermost-5.7.0-linux-amd64.tar.gz ./
+cp /vagrant/mattermost-5.8.0-linux-amd64.tar.gz ./
+# wget https://releases.mattermost.com/5.8.0/mattermost-5.8.0-linux-amd64.tar.gz
 echo "Unzipping Mattermost"
 tar -xzf mattermost*.gz
 
