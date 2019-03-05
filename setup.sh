@@ -54,11 +54,13 @@ chmod -R g+w /opt/mattermost
 ln -s /vagrant/mattermost.service /lib/systemd/system/mattermost.service
 systemctl daemon-reload
 
+echo "Starting PostgreSQL"
+service postgresql start
+
 cd /opt/mattermost
+bin/mattermost config validate
 bin/mattermost user create --email admin@planetexpress.com --username admin --password admin --system_admin
 bin/mattermost sampledata --seed 10 --teams 4 --users 30
 
-echo "Starting PostgreSQL"
-service postgresql start
 echo "Starting Mattermost!"
 service mattermost start
