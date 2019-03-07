@@ -1,17 +1,13 @@
 #!/bin/bash
 
-echo "INSTALLING MATTERMOST"
-echo "Updating and Upgrading"
 apt-get -q -y update > /dev/null
-apt-get -q -y install jq
-echo "Downloading mattermost"
-# wget --quiet https://releases.mattermost.com/5.5.1/mattermost-5.5.1-linux-amd64.tar.gz
+apt-get -q -y install jq cifs-utils
 
-# TODO: Check if file exists and use that, otherwise download latest version
-# TODO: Specify version
+mkdir -p /media/mmst-data
+cat /vagrant/client_fstab >> /etc/fstab
+mount -a
 
-cp /vagrant/mattermost*.gz ./
-echo "Extracting"
+cp /vagrant/mattermost-5.8.0-linux-amd64.tar.gz ./
 tar -xzf mattermost*.gz
 
 rm mattermost*.gz
@@ -26,6 +22,7 @@ jq '.SqlSettings.DataSource = "mmuser:really_secure_password@tcp(192.168.33.101:
 jq '.ClusterSettings.Enable = true' /vagrant/config.json > /vagrant/config.tmp.json && mv /vagrant/config.tmp.json /vagrant/config.json
 jq '.ClusterSettings.ClusterName = "Buster"' /vagrant/config.json > /vagrant/config.tmp.json && mv /vagrant/config.tmp.json /vagrant/config.json
 jq '.ClusterSettings.OverrideHostname = "#IP_ADDR"' /vagrant/config.json > /vagrant/config.tmp.json && mv /vagrant/config.tmp.json /vagrant/config.json
+jq '.FileSettings.Directory = "/media/mmst-data/"' /vagrant/config.json > /vagrant/config.tmp.json && mv /vagrant/config.tmp.json /vagrant/config.json
 
 cp /vagrant/config.json /opt/mattermost/config/config.json
 

@@ -6,19 +6,21 @@ apt-get -q -y update
 export DEBIAN_FRONTEND=noninteractive
 debconf-set-selections <<< 'mysql-server mysql-server/root_password password root'
 debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password root'
-apt-get -q -y install mysql-server
+apt-get -q -y install mysql-server nginx samba
 
-apt-get -y -q install nginx
-
-# Allows cluster to connect
+# Allows cluster to connect to MySQL
 sed -i 's|bind-address|#bind-address|g' /etc/mysql/mysql.conf.d/mysqld.cnf
+sudo service mysql restart
+mysql -uroot -proot < /vagrant/db_setup.sql
 
-# Copy Nginx configuration
 mv /etc/nginx/sites-available/default /etc/nginx/sites-available/default.orig
 cp /vagrant/nginx.conf /etc/nginx/sites-available/default
-
 service nginx restart
-service mysql restart
 
-# Set up Mattermost database and user
-mysql -uroot -proot < /vagrant/db_setup.sql
+mkdir -p /shared/mmst-data
+useradd --system --user-group mattermost
+chown -R mattermost:mattermost /vagrant/shared/data
+mv /etc/samba/smb.conf /etc/samba/orig.smb.conf
+ln -s /vagrant/smb.conf /etc/samba/smb.conf
+(echo samba_password; echo samba_password) | smbpasswd -a mattermost
+service smbd restart
