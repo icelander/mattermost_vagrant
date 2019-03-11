@@ -7,7 +7,7 @@ mkdir -p /media/mmst-data
 cat /vagrant/client_fstab >> /etc/fstab
 mount -a
 
-cp /vagrant/mattermost-5.8.0-linux-amd64.tar.gz ./
+wget https://releases.mattermost.com/5.8.0/mattermost-5.8.0-linux-amd64.tar.gz
 tar -xzf mattermost*.gz
 
 rm mattermost*.gz
