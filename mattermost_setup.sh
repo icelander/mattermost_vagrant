@@ -22,6 +22,7 @@ jq '.SqlSettings.DataSource = "mmuser:really_secure_password@tcp(192.168.33.101:
 jq '.ClusterSettings.Enable = true' /vagrant/config.json > /vagrant/config.tmp.json && mv /vagrant/config.tmp.json /vagrant/config.json
 jq '.ClusterSettings.ClusterName = "Buster"' /vagrant/config.json > /vagrant/config.tmp.json && mv /vagrant/config.tmp.json /vagrant/config.json
 jq '.ClusterSettings.OverrideHostname = "#IP_ADDR"' /vagrant/config.json > /vagrant/config.tmp.json && mv /vagrant/config.tmp.json /vagrant/config.json
+jq '.ClusterSettings.ReadOnlyConfig = false' /vagrant/config.json > /vagrant/config.tmp.json && mv /vagrant/config.tmp.json /vagrant/config.json
 jq '.FileSettings.Directory = "/media/mmst-data/"' /vagrant/config.json > /vagrant/config.tmp.json && mv /vagrant/config.tmp.json /vagrant/config.json
 
 cp /vagrant/config.json /opt/mattermost/config/config.json
@@ -32,5 +33,6 @@ chmod -R g+w /opt/mattermost
 
 cp /vagrant/mattermost.service /lib/systemd/system/mattermost.service
 systemctl daemon-reload
+/opt/mattermost/bin/mattermost version
 echo "Starting Mattermost"
 service mattermost start

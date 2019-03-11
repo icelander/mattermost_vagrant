@@ -11,8 +11,8 @@ Vagrant.configure("2") do |config|
 	config.vm.define 'nginx' do |box|
 		box.vm.hostname = 'nginx'
 		box.vm.network :private_network, ip: PROXY_IP
-		box.vm.network "forwarded_port", guest: 3306, host: 23306, host_ip: "127.0.0.1"
-		box.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
+		box.vm.network "forwarded_port", guest: 3306, host: 23306
+		box.vm.network "forwarded_port", guest: 80, host: 8080
 
 		setup_script = File.read('setup.sh')
 

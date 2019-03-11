@@ -1,1 +1,1 @@
-//192.168.33.101/mmst-data  /media/mmst-data  cifs  credentials=/vagrant/smbcredentials,uid=mattermost,gid=mattermost,iocharset=utf8,rw  0  0
+//192.168.33.101/mmst-data  /media/mmst-data  cifs  credentials=/vagrant/smbcredentials,uid=998,gid=998,iocharset=utf8,rw  0  0

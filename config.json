@@ -340,10 +340,10 @@
   "ClusterSettings": {
     "Enable": true,
     "ClusterName": "Buster",
-    "OverrideHostname": "192.168.33.102",
+    "OverrideHostname": "192.168.33.103",
     "UseIpAddress": true,
     "UseExperimentalGossip": false,
-    "ReadOnlyConfig": true,
+    "ReadOnlyConfig": false,
     "GossipPort": 8074,
     "StreamingPort": 8075,
     "MaxIdleConns": 100,

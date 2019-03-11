@@ -18,9 +18,12 @@ cp /vagrant/nginx.conf /etc/nginx/sites-available/default
 service nginx restart
 
 mkdir -p /shared/mmst-data
-useradd --system --user-group mattermost
-chown -R mattermost:mattermost /vagrant/shared/data
+
+adduser --no-create-home --disabled-password --disabled-login --gecos "" mattermost
+
+chown -R mattermost:mattermost /shared/mmst-data
 mv /etc/samba/smb.conf /etc/samba/orig.smb.conf
 ln -s /vagrant/smb.conf /etc/samba/smb.conf
+cat /etc/passwd | mksmbpasswd > /etc/smbpasswd
 (echo samba_password; echo samba_password) | smbpasswd -a mattermost
 service smbd restart
