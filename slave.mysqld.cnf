@@ -27,7 +27,7 @@ query_cache_size        = 16M
 
 log_error = /var/log/mysql/error.log
 
-server-id		= #SERVER_ID
+server-id		= #SERVERID
 log_bin			= /var/log/mysql/mysql-bin.log
 expire_logs_days	= 10
 max_binlog_size   = 100M

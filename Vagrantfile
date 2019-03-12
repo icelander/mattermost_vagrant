@@ -1,5 +1,5 @@
 MYSQL_CLUSTER_IPS = ['192.168.33.101', '192.168.33.102', '192.168.33.103']
-MATTERMOST_IP = '192.168.33.101'
+MATTERMOST_IP = '192.168.33.103'
 MYSQL_CLUSTER_PREFIX = 'mysql'
 
 MYSQL_ROOT_PASSWORD = 'mysql_root_password'
@@ -26,13 +26,13 @@ Vagrant.configure("2") do |config|
 		end
 	end
 
-	# config.vm.define 'mattermost' do |box|
-	# 	box.vm.hostname = 'mattermost'
-	# 	box.vm.network :private_network, ip: MATTERMOST_IP
-	# 	box.vm.network "forwarded_port", guest: 8065, host: 8065, host_ip: "127.0.0.1"
+	config.vm.define 'mattermost' do |box|
+		box.vm.hostname = 'mattermost'
+		box.vm.network :private_network, ip: MATTERMOST_IP
+		box.vm.network "forwarded_port", guest: 8065, host: 8065, host_ip: "127.0.0.1"
 
-	# 	setup_script = File.read('mattermost_setup.sh')
+		setup_script = File.read('setup.sh')
 
-	# 	# box.vm.provision :shell, inline: setup_script, run: 'once'
-	# end
+		box.vm.provision :shell, inline: setup_script, run: 'once'
+	end
 end

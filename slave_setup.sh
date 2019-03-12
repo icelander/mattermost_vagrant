@@ -9,4 +9,4 @@ debconf-set-selections <<< 'mysql-server mysql-server/root_password_again passwo
 apt-get -q -y install mysql-server mysql-client
 
 # Set up Mattermost database and user
-# mysql -uroot -proot < /vagrant/db_setup.sql
+mysql -uroot -proot < /vagrant/slave_db_setup.sql
