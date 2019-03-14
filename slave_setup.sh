@@ -10,3 +10,10 @@ apt-get -q -y install mysql-server mysql-client
 
 # Set up Mattermost database and user
 mysql -uroot -proot < /vagrant/slave_db_setup.sql
+
+
+service mysql stop
+mv /etc/mysql/mysql.conf.d/mysqld.cnf /etc/mysql/mysql.conf.d/orig.mysqld.cnf
+cp /vagrant/slave.mysqld.cnf /etc/mysql/mysql.conf.d/mysqld.cnf
+
+sed -i 's/SERVERID/#SERVERID/g' /etc/mysql/mysql.conf.d/mysqld.cnf

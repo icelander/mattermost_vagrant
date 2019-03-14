@@ -14,5 +14,13 @@ service mysql stop
 mv /etc/mysql/mysql.conf.d/mysqld.cnf /etc/mysql/mysql.conf.d/orig.mysqld.cnf
 cp /vagrant/master.mysqld.cnf /etc/mysql/mysql.conf.d/mysqld.cnf
 
+service mysql start
+
 # Set up Mattermost database and user
 # 
+
+# +------------------+----------+--------------+------------------+-------------------+
+# | File             | Position | Binlog_Do_DB | Binlog_Ignore_DB | Executed_Gtid_Set |
+# +------------------+----------+--------------+------------------+-------------------+
+# | mysql-bin.000001 |      154 | mattermost   |                  |                   |
+# +------------------+----------+--------------+------------------+-------------------+

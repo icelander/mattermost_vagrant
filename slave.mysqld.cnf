@@ -13,7 +13,7 @@ tmpdir		= /tmp
 lc-messages-dir	= /usr/share/mysql
 skip-external-locking
 
-bind-address		= *
+bind-address		= 0.0.0.0
 
 key_buffer_size		= 16M
 max_allowed_packet	= 16M
@@ -27,7 +27,7 @@ query_cache_size        = 16M
 
 log_error = /var/log/mysql/error.log
 
-server-id		= #SERVERID
+server-id		= SERVERID
 log_bin			= /var/log/mysql/mysql-bin.log
 expire_logs_days	= 10
 max_binlog_size   = 100M

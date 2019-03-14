@@ -1,5 +1,5 @@
-MYSQL_CLUSTER_IPS = ['192.168.33.101', '192.168.33.102', '192.168.33.103']
-MATTERMOST_IP = '192.168.33.103'
+MYSQL_CLUSTER_IPS = ['192.168.33.101', '192.168.33.102']
+MATTERMOST_IP = '192.168.33.104'
 MYSQL_CLUSTER_PREFIX = 'mysql'
 
 MYSQL_ROOT_PASSWORD = 'mysql_root_password'
@@ -16,13 +16,20 @@ Vagrant.configure("2") do |config|
 		config.vm.define box_hostname do |box|
 			box.vm.hostname = box_hostname
 
+			box.vm.network :private_network, ip: node_ip
+			puts "#{index+1}3306".to_i
+			box.vm.network "forwarded_port", guest: 3306, host: "#{index+1}3306".to_i
+
 			if index == 0
 				setup_script = File.read('master_setup.sh')
 			else
 				setup_script = File.read('slave_setup.sh')
+				setup_script.gsub! '#SERVERID', (index+2).to_s
 			end
 
-			box.vm.network :private_network, ip: node_ip
+			puts setup_script
+
+			box.vm.provision :shell, inline: setup_script, run: 'once'
 		end
 	end
 
