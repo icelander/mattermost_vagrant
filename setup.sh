@@ -23,8 +23,8 @@ rm /tmp/db_setup.sql
 
 rm -rf /opt/mattermost
 echo "Downloading Mattermost"
-cp /vagrant/mattermost-5.8.0-linux-amd64.tar.gz ./
-# wget https://releases.mattermost.com/5.8.0/mattermost-5.8.0-linux-amd64.tar.gz
+# cp /vagrant/mattermost-5.8.0-linux-amd64.tar.gz ./
+wget https://releases.mattermost.com/5.5.0/mattermost-5.5.0-linux-amd64.tar.gz
 echo "Unzipping Mattermost"
 tar -xzf mattermost*.gz
 
@@ -44,7 +44,7 @@ jq '.ServiceSettings.LicenseFileLocation = "/opt/mattermost/license.txt"' /vagra
 chmod 777 /vagrant/config.vagrant.json
 
 ln -s /vagrant/config.vagrant.json /opt/mattermost/config/config.json
-ln -s /vagrant/license.txt /opt/mattermost/license.txt
+ln -s /vagrant/e10license.txt /opt/mattermost/license.txt
 
 echo "Creating Mattermost User"
 useradd --system --user-group mattermost
