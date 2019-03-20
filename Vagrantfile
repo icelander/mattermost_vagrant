@@ -27,7 +27,7 @@ Vagrant.configure("2") do |config|
 				setup_script.gsub! '#SERVERID', (index+2).to_s
 			end
 
-			puts setup_script
+			# puts setup_script
 
 			box.vm.provision :shell, inline: setup_script, run: 'once'
 		end
