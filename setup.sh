@@ -23,8 +23,8 @@ rm /tmp/db_setup.sql
 
 rm -rf /opt/mattermost
 echo "Downloading Mattermost"
-# cp /vagrant/mattermost-5.8.0-linux-amd64.tar.gz ./
-wget https://releases.mattermost.com/5.5.0/mattermost-5.5.0-linux-amd64.tar.gz
+cp /vagrant/mattermost-5.8.0-linux-amd64.tar.gz ./
+# wget https://releases.mattermost.com/5.5.0/mattermost-5.5.0-linux-amd64.tar.gz
 echo "Unzipping Mattermost"
 tar -xzf mattermost*.gz
 
@@ -34,14 +34,13 @@ mv mattermost /opt
 mkdir /opt/mattermost/data
 
 echo "Copying Config File"
-cp /opt/mattermost/config/config.json /opt/mattermost/config/config.orig.json
-mv /opt/mattermost/config/config.json /vagrant/config.vagrant.json
+mv /opt/mattermost/config/config.json /opt/mattermost/config/config.orig.json
 # Edit config file with JQ
-jq '.SqlSettings.DriverName = "postgres"' /vagrant/config.vagrant.json > /vagrant/config.vagrant.json.tmp && mv /vagrant/config.vagrant.json.tmp /vagrant/config.vagrant.json
-jq '.SqlSettings.DataSource = "postgres://mmuser:really_secure_password@127.0.0.1:5432/mattermost?sslmode=disable\u0026connect_timeout=10"' /vagrant/config.vagrant.json > /vagrant/config.vagrant.json.tmp && mv /vagrant/config.vagrant.json.tmp /vagrant/config.vagrant.json
-jq '.ServiceSettings.LicenseFileLocation = "/opt/mattermost/license.txt"' /vagrant/config.vagrant.json > /vagrant/config.vagrant.json.tmp && mv /vagrant/config.vagrant.json.tmp /vagrant/config.vagrant.json
+
+jq -s '.[0] * .[1]' /opt/mattermost/config/config.orig.json /vagrant/config.json > /vagrant/config.vagrant.json
 
 chmod 777 /vagrant/config.vagrant.json
+
 
 ln -s /vagrant/config.vagrant.json /opt/mattermost/config/config.json
 ln -s /vagrant/e10license.txt /opt/mattermost/license.txt
