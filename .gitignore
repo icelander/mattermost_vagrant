@@ -3,3 +3,8 @@
 
 mattermost*gz
 maattermost-update/
+
+config.vagrant.json
+
+mattermost-export*.sql
+slave_setup.sql

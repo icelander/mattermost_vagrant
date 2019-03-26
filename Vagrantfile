@@ -1,8 +1,12 @@
-MATTERMOST_CLUSTER_IPS = ['192.168.33.102', '192.168.33.103']
 PROXY_IP = '192.168.33.101'
-MATTERMOST_CLUSTER_PREFIX = 'mattermost'
 
-MYSQL_ROOT_PASSWORD = 'mysql_root_password'
+MATTERMOST_CLUSTER_IPS = ['192.168.33.102', '192.168.33.103']
+MYSQL_REPLICA_IPS = ['192.168.33.104, 192.168.33.105']
+
+MATTERMOST_CLUSTER_PREFIX = 'mattermost'
+MYSQL_REPLICA_PREFIX = 'mysql'
+
+MYSQL_ROOT_PASSWORD = 'root'
 MATTERMOST_PASSWORD = 'really_secure_password'
 
 Vagrant.configure("2") do |config|
@@ -20,18 +24,37 @@ Vagrant.configure("2") do |config|
 	end
 
 
-  	node_ips = MATTERMOST_CLUSTER_IPS
+ #  	node_ips = MATTERMOST_CLUSTER_IPS
+
+	# node_ips.each_with_index do |node_ip, index|
+	# 	box_hostname = "#{MATTERMOST_CLUSTER_PREFIX}#{index}"
+		
+
+	# 	config.vm.define box_hostname do |box|
+	# 		box.vm.hostname = box_hostname
+	# 		setup_script = File.read('mattermost_setup.sh')
+
+	# 		setup_script.gsub! '#IP_ADDR', node_ip
+
+	# 		box.vm.network :private_network, ip: node_ip
+	# 		box.vm.provision :shell, inline: setup_script, run: 'once'
+	# 	end
+	# end
+
+	node_ips = MYSQL_REPLICA_IPS
 
 	node_ips.each_with_index do |node_ip, index|
-		box_hostname = "#{MATTERMOST_CLUSTER_PREFIX}#{index}"
+		box_hostname = "#{MYSQL_REPLICA_PREFIX}#{index}"
 		
 
 		config.vm.define box_hostname do |box|
 			box.vm.hostname = box_hostname
-			setup_script = File.read('mattermost_setup.sh')
+			setup_script = File.read('db_slave_setup.sh')
 
-			setup_script.gsub! '#IP_ADDR', node_ip
+			setup_script.gsub! '#IP_ADDR#', node_ip
+			setup_script.gsub! '#SERVER_ID#', (index+2).to_s()
 
+			box.vm.network "forwarded_port", guest: 3306, host: "#{index+3}3306".to_i()
 			box.vm.network :private_network, ip: node_ip
 			box.vm.provision :shell, inline: setup_script, run: 'once'
 		end
