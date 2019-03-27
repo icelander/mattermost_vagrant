@@ -27,7 +27,11 @@ mv /opt/mattermost/config/config.json /opt/mattermost/config/config.orig.json
 jq -s '.[0] * .[1]' /opt/mattermost/config/config.orig.json /vagrant/config.json > /vagrant/config.vagrant.json
 chmod 777 /vagrant/config.vagrant.json
 
-ln -s /vagrant/config.vagrant.json /opt/mattermost/config/config.json
+sed -i 's|#IP_ADDRESS|#IP_ADDRESS#|g' /vagrant/config.vagrant.json
+
+cp /vagrant/config.vagrant.json /opt/mattermost/config/config.json
+
+rm /vagrant/config.vagrant.json
 
 useradd --system --user-group mattermost
 chown -R mattermost:mattermost /opt/mattermost

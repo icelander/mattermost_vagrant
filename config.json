@@ -41,8 +41,8 @@
   "ClusterSettings": {
     "Enable": true,
     "ClusterName": "Buster",
-    "OverrideHostname": "",
-    "UseIpAddress": true,
+    "OverrideHostname": "#IP_ADDRESS",
+    "UseIpAddress": false,
     "UseExperimentalGossip": false,
     "ReadOnlyConfig": false,
     "GossipPort": 8074,

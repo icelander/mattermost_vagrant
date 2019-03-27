@@ -1,4 +1,4 @@
-PROXY_IP = '192.168.33.101'
+MASTER_IP = '192.168.33.101'
 
 MATTERMOST_CLUSTER_IPS = ['192.168.33.104', '192.168.33.105']
 MYSQL_REPLICA_IPS = ['192.168.33.102', '192.168.33.103']
@@ -14,7 +14,7 @@ Vagrant.configure("2") do |config|
 
 	config.vm.define 'nginx' do |box|
 		box.vm.hostname = 'nginx'
-		box.vm.network :private_network, ip: PROXY_IP
+		box.vm.network :private_network, ip: MASTER_IP
 		# box.vm.network "forwarded_port", guest: 3306, host: 23306
 		box.vm.network "forwarded_port", guest: 80, host: 8080
 
@@ -56,7 +56,7 @@ Vagrant.configure("2") do |config|
 			box.vm.hostname = box_hostname
 			setup_script = File.read('mattermost_setup.sh')
 
-			setup_script.gsub! '#IP_ADDR', node_ip
+			setup_script.gsub! '#IP_ADDRESS#', node_ip
 
 			box.vm.network :private_network, ip: node_ip
 			box.vm.provision :shell, inline: setup_script, run: 'once'
