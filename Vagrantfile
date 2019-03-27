@@ -24,23 +24,6 @@ Vagrant.configure("2") do |config|
 	end
 
 
- #  	node_ips = MATTERMOST_CLUSTER_IPS
-
-	# node_ips.each_with_index do |node_ip, index|
-	# 	box_hostname = "#{MATTERMOST_CLUSTER_PREFIX}#{index}"
-		
-
-	# 	config.vm.define box_hostname do |box|
-	# 		box.vm.hostname = box_hostname
-	# 		setup_script = File.read('mattermost_setup.sh')
-
-	# 		setup_script.gsub! '#IP_ADDR', node_ip
-
-	# 		box.vm.network :private_network, ip: node_ip
-	# 		box.vm.provision :shell, inline: setup_script, run: 'once'
-	# 	end
-	# end
-
 	node_ips = MYSQL_REPLICA_IPS
 
 	node_ips.each_with_index do |node_ip, index|
@@ -55,6 +38,24 @@ Vagrant.configure("2") do |config|
 			setup_script.gsub! '#SERVER_ID#', (index+2).to_s()
 
 			box.vm.network "forwarded_port", guest: 3306, host: "#{index+3}3306".to_i()
+			box.vm.network :private_network, ip: node_ip
+			box.vm.provision :shell, inline: setup_script, run: 'once'
+		end
+	end
+
+
+	node_ips = MATTERMOST_CLUSTER_IPS
+
+	node_ips.each_with_index do |node_ip, index|
+		box_hostname = "#{MATTERMOST_CLUSTER_PREFIX}#{index}"
+		
+
+		config.vm.define box_hostname do |box|
+			box.vm.hostname = box_hostname
+			setup_script = File.read('mattermost_setup.sh')
+
+			setup_script.gsub! '#IP_ADDR', node_ip
+
 			box.vm.network :private_network, ip: node_ip
 			box.vm.provision :shell, inline: setup_script, run: 'once'
 		end
