@@ -1,7 +1,7 @@
 PROXY_IP = '192.168.33.101'
 
-MATTERMOST_CLUSTER_IPS = ['192.168.33.102', '192.168.33.103']
-MYSQL_REPLICA_IPS = ['192.168.33.104, 192.168.33.105']
+MATTERMOST_CLUSTER_IPS = ['192.168.33.104', '192.168.33.105']
+MYSQL_REPLICA_IPS = ['192.168.33.102', '192.168.33.103']
 
 MATTERMOST_CLUSTER_PREFIX = 'mattermost'
 MYSQL_REPLICA_PREFIX = 'mysql'
@@ -15,12 +15,14 @@ Vagrant.configure("2") do |config|
 	config.vm.define 'nginx' do |box|
 		box.vm.hostname = 'nginx'
 		box.vm.network :private_network, ip: PROXY_IP
-		box.vm.network "forwarded_port", guest: 3306, host: 23306
+		# box.vm.network "forwarded_port", guest: 3306, host: 23306
 		box.vm.network "forwarded_port", guest: 80, host: 8080
 
 		setup_script = File.read('setup.sh')
 
 		box.vm.provision :shell, inline: setup_script, run: 'once'
+
+		box.vm.provision :shell, path: 'replication-setup.sh', run: 'always'
 	end
 
 
@@ -37,7 +39,7 @@ Vagrant.configure("2") do |config|
 			setup_script.gsub! '#IP_ADDR#', node_ip
 			setup_script.gsub! '#SERVER_ID#', (index+2).to_s()
 
-			box.vm.network "forwarded_port", guest: 3306, host: "#{index+3}3306".to_i()
+			# box.vm.network "forwarded_port", guest: 3306, host: "#{index+3}3306".to_i()
 			box.vm.network :private_network, ip: node_ip
 			box.vm.provision :shell, inline: setup_script, run: 'once'
 		end

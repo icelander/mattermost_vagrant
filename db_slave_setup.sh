@@ -15,8 +15,10 @@ sed -i 's|#SERVER_ID|#SERVER_ID#|g' /etc/mysql/mysql.conf.d/mysqld.cnf
 
 sudo service mysql restart
 
+mysql -uroot -proot < /vagrant/db_setup.sql
+
 DB=mattermost
-DUMP_FILE="/tmp/$DB-export-$(date +"%Y%m%d").sql"
+DUMP_FILE="/vagrant/$DB-export-$(date +"%Y%m%d").sql"
 
 MASTER_USER=root
 MASTER_PASS=root
