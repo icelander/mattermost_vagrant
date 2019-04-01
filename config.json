@@ -50,5 +50,13 @@
     "MaxIdleConns": 100,
     "MaxIdleConnsPerHost": 128,
     "IdleConnTimeoutMilliseconds": 90000
-  }
+  },
+  "PluginSettings": {
+      "Enable": true,
+      "EnableUploads": false,
+      "Directory": "/media/mmst-data/plugins",
+      "ClientDirectory": "/media/mmst-data/client/plugins",
+      "Plugins": {},
+      "PluginStates": {}
+  },
 }
