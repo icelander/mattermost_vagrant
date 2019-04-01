@@ -31,7 +31,7 @@ sed -i 's|#IP_ADDRESS|#IP_ADDRESS#|g' /vagrant/config.vagrant.json
 
 cp /vagrant/config.vagrant.json /opt/mattermost/config/config.json
 
-rm /vagrant/config.vagrant.json
+# rm /vagrant/config.vagrant.json
 
 useradd --system --user-group mattermost
 chown -R mattermost:mattermost /opt/mattermost
