@@ -43,7 +43,7 @@ chmod 777 /vagrant/config.vagrant.json
 
 
 ln -s /vagrant/config.vagrant.json /opt/mattermost/config/config.json
-ln -s /vagrant/e10license.txt /opt/mattermost/license.txt
+ln -s /vagrant/e20license.txt /opt/mattermost/license.txt
 
 echo "Creating Mattermost User"
 useradd --system --user-group mattermost
@@ -57,7 +57,7 @@ echo "Starting PostgreSQL"
 service postgresql start
 
 cd /opt/mattermost
-bin/mattermost config validate
+bin/mattermost version
 bin/mattermost user create --email admin@planetexpress.com --username admin --password admin --system_admin
 bin/mattermost sampledata --seed 10 --teams 4 --users 30
 
