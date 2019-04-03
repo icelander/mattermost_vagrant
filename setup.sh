@@ -18,7 +18,7 @@ mv /etc/nginx/sites-available/default /etc/nginx/sites-available/default.orig
 cp /vagrant/nginx.conf /etc/nginx/sites-available/default
 service nginx restart
 
-mkdir -p /shared/mmst-data
+mkdir -p /shared/mmst-data/{data,plugins,client_plugins}
 
 adduser --no-create-home --disabled-password --disabled-login --gecos "" mattermost
 

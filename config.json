@@ -35,7 +35,7 @@
     "EnableMobileDownload": true,
     "MaxFileSize": 52428800,
     "DriverName": "local",
-    "Directory": "/media/mmst-data/",
+    "Directory": "/media/mmst-data/data/",
     "EnablePublicLink": false
   },
   "ClusterSettings": {
@@ -53,9 +53,9 @@
   },
   "PluginSettings": {
       "Enable": true,
-      "EnableUploads": false,
+      "EnableUploads": true,
       "Directory": "/media/mmst-data/plugins",
-      "ClientDirectory": "/media/mmst-data/client/plugins",
+      "ClientDirectory": "/media/mmst-data/client_plugins",
       "Plugins": {},
       "PluginStates": {}
   }
