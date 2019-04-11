@@ -8,11 +8,11 @@ apt-get install -y -q postgresql postgresql-contrib jq
 
 
 # sudo su postgres -c "createdb -E UTF8 -T template0 --locale=en_US.utf8 -O vagrant wtm"
-cp /etc/postgresql/9.5/main/pg_hba.conf /etc/postgresql/9.5/main/pg_hba.orig.conf
-cp /vagrant/pg_hba.conf /etc/postgresql/9.5/main/pg_hba.conf
+cp /etc/postgresql/10/main/pg_hba.conf /etc/postgresql/10/main/pg_hba.orig.conf
+cp /vagrant/pg_hba.conf /etc/postgresql/10/main/pg_hba.conf
 
-cp /etc/postgresql/9.5/main/postgresql.conf /etc/postgresql/9.5/main/postgresql.orig.conf
-cp /vagrant/postgresql.conf /etc/postgresql/9.5/main/postgresql.conf
+cp /etc/postgresql/10/main/postgresql.conf /etc/postgresql/10/main/postgresql.orig.conf
+cp /vagrant/postgresql.conf /etc/postgresql/10/main/postgresql.conf
 
 sudo systemctl reload postgresql
 
@@ -23,7 +23,8 @@ rm /tmp/db_setup.sql
 
 rm -rf /opt/mattermost
 echo "Downloading Mattermost"
-cp /vagrant/mattermost-5.8.0-linux-amd64.tar.gz ./
+cp /vagrant/mattermost-5.9.0-linux.amd64.tar.gz ./
+# wget https://releases.mattermost.com/3.8.0/mattermost-3.8.0-linux-amd64.tar.gz
 # wget https://releases.mattermost.com/5.5.0/mattermost-5.5.0-linux-amd64.tar.gz
 echo "Unzipping Mattermost"
 tar -xzf mattermost*.gz
@@ -36,13 +37,9 @@ mkdir /opt/mattermost/data
 echo "Copying Config File"
 mv /opt/mattermost/config/config.json /opt/mattermost/config/config.orig.json
 # Edit config file with JQ
+jq -s '.[0] * .[1]' /opt/mattermost/config/config.orig.json /vagrant/config.json > /opt/mattermost/config/config.json
 
-jq -s '.[0] * .[1]' /opt/mattermost/config/config.orig.json /vagrant/config.json > /vagrant/config.vagrant.json
-
-chmod 777 /vagrant/config.vagrant.json
-
-
-ln -s /vagrant/config.vagrant.json /opt/mattermost/config/config.json
+cp /opt/mattermost/config/config.json /vagrant/config.vagrant.json
 ln -s /vagrant/e20license.txt /opt/mattermost/license.txt
 
 echo "Creating Mattermost User"

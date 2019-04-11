@@ -1,7 +1,8 @@
 {
     "ServiceSettings": {
         "SiteURL": "http://127.0.0.1:8065",
-        "LicenseFileLocation": "/opt/mattermost/license.txt"
+        "LicenseFileLocation": "/opt/mattermost/license.txt",
+        "PostEditTimeLimit": 60
     },
     "TeamSettings": {
         "SiteName": "Vagrant"
@@ -9,24 +10,11 @@
     "SqlSettings": {
         "DriverName": "postgres",
         "DataSource": "postgres://mmuser:really_secure_password@127.0.0.1:5432/mattermost?sslmode=disable\u0026connect_timeout=10",
-        "DataSourceReplicas": [],
-        "DataSourceSearchReplicas": [],
-        "MaxIdleConns": 20,
-        "ConnMaxLifetimeMilliseconds": 3600000,
-        "MaxOpenConns": 300,
-        "Trace": false,
-        "AtRestEncryptKey": "a9nbj0IgG7mHu2j/40g0uTZ4ShCyb4EP",
-        "QueryTimeout": 30
+        "Trace": false
+        
     },
     "LogSettings": {
-        "EnableConsole": true,
         "ConsoleLevel": "DEBUG",
-        "ConsoleJson": false,
-        "EnableFile": true,
-        "FileLevel": "DEBUG",
-        "FileJson": false,
-        "FileLocation": "",
-        "EnableWebhookDebugging": true,
-        "EnableDiagnostics": true
+        "FileLevel": "DEBUG"
     }
 }
