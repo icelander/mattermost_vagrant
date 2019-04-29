@@ -1,7 +1,7 @@
 MASTER_IP = '192.168.33.101'
 
 MATTERMOST_CLUSTER_IPS = ['192.168.33.104', '192.168.33.105']
-MYSQL_REPLICA_IPS = ['192.168.33.102', '192.168.33.103']
+MYSQL_REPLICA_IPS = [] #['192.168.33.102', '192.168.33.103']
 
 MATTERMOST_CLUSTER_PREFIX = 'mattermost'
 MYSQL_REPLICA_PREFIX = 'mysql'
@@ -58,7 +58,7 @@ Vagrant.configure("2") do |config|
 
 			setup_script.gsub! '#IP_ADDRESS#', node_ip
 
-			box.vm.network :private_network, ip: node_ip
+			box.vm.network :private_network, ip: node_ip, bridge: "en0: Wi-Fi (AirPort)"
 			box.vm.provision :shell, inline: setup_script, run: 'once'
 		end
 	end

@@ -7,12 +7,14 @@ mkdir -p /media/mmst-data
 cat /vagrant/client_fstab >> /etc/fstab
 mount -a
 
+cat /vagrant/hosts >> /etc/hosts
+
 # Download Mattermost
-if [ ! -f /vagrant/mattermost-5.9.0-linux.amd64.tar.gz ]; then
-    wget --quiet https://releases.mattermost.com/5.9.0/mattermost-5.9.0-linux-amd64.tar.gz
-    cp mattermost-5.9.0-linux-amd64.tar.gz /vagrant/mattermost-5.9.0-linux.amd64.tar.gz
+if [ ! -f /vagrant/mattermost-5.10.0-linux.amd64.tar.gz ]; then
+    wget --quiet https://releases.mattermost.com/5.10.0/mattermost-5.10.0-linux-amd64.tar.gz
+    cp mattermost-5.10.0-linux-amd64.tar.gz /vagrant/mattermost-5.10.0-linux.amd64.tar.gz
 else
-	cp /vagrant/mattermost-5.9.0-linux.amd64.tar.gz ./	
+	cp /vagrant/mattermost-5.10.0-linux.amd64.tar.gz ./	
 fi
 
 tar -xzf mattermost*.gz
@@ -26,8 +28,6 @@ mv /opt/mattermost/config/config.json /opt/mattermost/config/config.orig.json
 
 jq -s '.[0] * .[1]' /opt/mattermost/config/config.orig.json /vagrant/config.json > /vagrant/config.vagrant.json
 chmod 777 /vagrant/config.vagrant.json
-
-sed -i 's|#IP_ADDRESS|#IP_ADDRESS#|g' /vagrant/config.vagrant.json
 
 cp /vagrant/config.vagrant.json /opt/mattermost/config/config.json
 
