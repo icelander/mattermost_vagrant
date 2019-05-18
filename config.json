@@ -9,7 +9,7 @@
   "SqlSettings": {
     "DriverName": "mysql",
     "DataSource": "mmuser:really_secure_password@tcp(192.168.33.101:3306)/mattermost?charset=utf8mb4,utf8\u0026readTimeout=30s\u0026writeTimeout=30s",
-    "DataSourceReplicas": [],
+    "DataSourceReplicas": ["mmuser:really_secure_password@tcp(192.168.33.102:3306)/mattermost?charset=utf8mb4,utf8\u0026readTimeout=30s\u0026writeTimeout=30s"],
     "DataSourceSearchReplicas": [],
     "MaxIdleConns": 20,
     "ConnMaxLifetimeMilliseconds": 3600000,
@@ -34,9 +34,20 @@
     "EnableMobileUpload": true,
     "EnableMobileDownload": true,
     "MaxFileSize": 52428800,
-    "DriverName": "local",
-    "Directory": "/media/mmst-data/data/",
-    "EnablePublicLink": false
+    "DriverName": "amazons3",
+    "Directory": "./data/",
+    "EnablePublicLink": false,
+    "PublicLinkSalt": "UEykEi4jX4a0LkR4q0AlSCQ3nWKci3Et",
+    "InitialFont": "luximbi.ttf",
+    "AmazonS3AccessKeyId": "AKIAI2AJPWLV6LON5BOQ",
+    "AmazonS3SecretAccessKey": "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",
+    "AmazonS3Bucket": "pauls-testbucket",
+    "AmazonS3Region": "",
+    "AmazonS3Endpoint": "s3.amazonaws.com",
+    "AmazonS3SSL": true,
+    "AmazonS3SignV2": false,
+    "AmazonS3SSE": false,
+    "AmazonS3Trace": true
   },
   "ClusterSettings": {
     "Enable": true,
