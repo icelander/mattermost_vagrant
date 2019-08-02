@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cat /vagrant/hosts >> /etc/hosts
+
 apt-get -q -y update
 
 # Sets the root password for MariaDB

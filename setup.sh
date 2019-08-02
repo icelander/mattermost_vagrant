@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cat /vagrant/hosts >> /etc/hosts
+
 apt-get -q -y update
 
 # Sets the root password for MariaDB
@@ -21,6 +23,7 @@ service nginx restart
 mkdir -p /shared/mmst-data/{data,plugins,client_plugins}
 
 adduser --no-create-home --disabled-password --disabled-login --gecos "" mattermost
+
 
 chown -R mattermost:mattermost /shared/mmst-data
 mv /etc/samba/smb.conf /etc/samba/orig.smb.conf

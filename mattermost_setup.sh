@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cat /vagrant/hosts >> /etc/hosts
+
 apt-get -q -y update > /dev/null
 apt-get -q -y install jq cifs-utils
 
@@ -10,11 +12,11 @@ mount -a
 # cat /vagrant/hosts >> /etc/hosts
 
 # Download Mattermost
-if [ ! -f /vagrant/mattermost-5.12.0-linux.amd64.tar.gz ]; then
-    wget --quiet https://releases.mattermost.com/5.12.0/mattermost-5.12.0-linux-amd64.tar.gz
-    cp mattermost-5.12.0-linux-amd64.tar.gz /vagrant/mattermost-5.12.0-linux.amd64.tar.gz
+if [ ! -f /vagrant/mattermost-5.13.2-linux.amd64.tar.gz ]; then
+    wget --quiet https://releases.mattermost.com/5.13.2/mattermost-5.13.2-linux-amd64.tar.gz
+    cp mattermost-5.13.2-linux-amd64.tar.gz /vagrant/mattermost-5.13.2-linux.amd64.tar.gz
 else
-	cp /vagrant/mattermost-5.12.0-linux.amd64.tar.gz ./	
+	cp /vagrant/mattermost-5.13.2-linux.amd64.tar.gz ./	
 fi
 
 tar -xzf mattermost*.gz
