@@ -30,8 +30,6 @@ mv /opt/mattermost/config/config.json /opt/mattermost/config/config.orig.json
 
 jq -s '.[0] * .[1]' /opt/mattermost/config/config.orig.json /vagrant/config.json > /vagrant/config.vagrant.json
 
-sed -i .bak 's/"OverrideHostname": ""/"OverrideHostname": "#IP_ADDRESS"/' /opt/mattermost/config/config.json
-
 chmod 777 /vagrant/config.vagrant.json
 
 cp /vagrant/config.vagrant.json /opt/mattermost/config/config.json
@@ -43,5 +41,9 @@ chmod -R g+w /opt/mattermost
 cp /vagrant/mattermost.service /lib/systemd/system/mattermost.service
 systemctl daemon-reload
 /opt/mattermost/bin/mattermost version
+
+# datasource=`jq '.SqlSettings.DataSource' /opt/mattermost/config/config.json | sed 's/"//g'`
+# /opt/mattermost/bin/mattermost config migrate  /opt/mattermost/config/config.json "mysql://$datasource"
+
 echo "Starting Mattermost"
 service mattermost start

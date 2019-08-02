@@ -53,7 +53,7 @@
     "Enable": true,
     "ClusterName": "Buster",
     "OverrideHostname": "",
-    "UseIpAddress": true,
+    "UseIpAddress": false,
     "UseExperimentalGossip": false,
     "ReadOnlyConfig": false,
     "GossipPort": 8074,
@@ -69,5 +69,18 @@
       "ClientDirectory": "/media/mmst-data/client_plugins",
       "Plugins": {},
       "PluginStates": {}
+  },
+  "MessageExportSettings": {
+      "EnableExport": true,
+      "ExportFormat": "csv",
+      "DailyRunTime": "19:50",
+      "ExportFromTimestamp": 0,
+      "BatchSize": 10000,
+      "GlobalRelaySettings": {
+          "CustomerType": "A9",
+          "SmtpUsername": "",
+          "SmtpPassword": "",
+          "EmailAddress": ""
+      }
   }
 }
