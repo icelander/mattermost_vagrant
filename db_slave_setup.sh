@@ -28,7 +28,7 @@ MASTER_PASS=root
 USER=mmuser
 PASS=really_secure_password
 
-MASTER_HOST=192.168.33.101
+MASTER_HOST=nginx
 SLAVE_HOST=#IP_ADDR#
 
 

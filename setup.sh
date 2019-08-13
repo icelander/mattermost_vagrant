@@ -17,13 +17,14 @@ sudo service mysql restart
 mysql -uroot -proot < /vagrant/db_setup.sql
 
 mv /etc/nginx/sites-available/default /etc/nginx/sites-available/default.orig
-cp /vagrant/nginx.conf /etc/nginx/sites-available/default
+# cp /vagrant/nginx.conf /etc/nginx/sites-available/default
+cat /vagrant/nginx_hosts > /etc/nginx/sites-available/default
+cat /vagrant/nginx.conf >> /etc/nginx/sites-available/default
 service nginx restart
 
 mkdir -p /shared/mmst-data/{data,plugins,client_plugins}
 
 adduser --no-create-home --disabled-password --disabled-login --gecos "" mattermost
-
 
 chown -R mattermost:mattermost /shared/mmst-data
 mv /etc/samba/smb.conf /etc/samba/orig.smb.conf

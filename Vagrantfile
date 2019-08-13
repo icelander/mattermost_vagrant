@@ -1,7 +1,7 @@
 MASTER_IP = '192.168.33.101'
 MASTER_HOSTNAME = 'nginx'
 
-MATTERMOST_CLUSTER_IPS = ['192.168.33.104', '192.168.33.105']
+MATTERMOST_CLUSTER_IPS = ['192.168.33.104', '192.168.33.105', '192.168.33.106']
 MYSQL_REPLICA_IPS = []
 
 MATTERMOST_CLUSTER_PREFIX = 'mattermost'
@@ -9,6 +9,8 @@ MYSQL_REPLICA_PREFIX = 'mysql'
 
 MYSQL_ROOT_PASSWORD = 'root'
 MATTERMOST_PASSWORD = 'really_secure_password'
+
+# Override the default router https://www.vagrantup.com/docs/networking/public_network.html#default-router
 
 Vagrant.configure("2") do |config|
 	config.vm.box = "bento/ubuntu-18.04"
@@ -24,6 +26,14 @@ Vagrant.configure("2") do |config|
 		box.vm.network "forwarded_port", guest: 80, host: 8080
 
 		setup_script = File.read('setup.sh')
+
+		nginx_hosts_file = File.open('nginx_hosts', 'w')
+		nginx_hosts_file.write("upstream backend {\n")
+		MATTERMOST_CLUSTER_IPS.each do |node_ip|
+			nginx_hosts_file.write("    server #{node_ip}:8065;\n")
+		end		
+		nginx_hosts_file.write("}\n\n")
+		nginx_hosts_file.close
 
 		box.vm.provision :shell, inline: setup_script
 
@@ -59,12 +69,10 @@ Vagrant.configure("2") do |config|
 
 		config.vm.define box_hostname do |box|
 			box.vm.hostname = box_hostname
-			setup_script = File.read('mattermost_setup.sh')
 
-			setup_script.gsub! '#IP_ADDRESS#', node_ip
-
-			box.vm.network :private_network, ip: node_ip, bridge: "en0: Wi-Fi (AirPort)"
-			box.vm.provision :shell, inline: setup_script
+			box.vm.network :private_network, ip: node_ip
+			box.vm.network "forwarded_port", guest: 8065, host: "#{index+1}8065".to_i()
+			box.vm.provision :shell, path: "mattermost_setup.sh"
 
 			if index == node_ips.size - 1
 				box.vm.provision :shell, path: 'mattermost_finalize.sh'
