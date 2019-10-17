@@ -12,11 +12,11 @@ mount -a
 # cat /vagrant/hosts >> /etc/hosts
 
 # Download Mattermost
-if [ ! -f /vagrant/mattermost-5.13.2-linux.amd64.tar.gz ]; then
+if [ ! -f /vagrant/mattermost_archives/mattermost-5.16.0-rc3-linux-amd64.tar ]; then
     wget --quiet https://releases.mattermost.com/5.13.2/mattermost-5.13.2-linux-amd64.tar.gz
-    cp mattermost-5.13.2-linux-amd64.tar.gz /vagrant/mattermost-5.13.2-linux.amd64.tar.gz
+    cp mattermost-5.13.2-linux-amd64.tar.gz /vagrant/mattermost_archives/mattermost-5.16.0-rc3-linux-amd64.tar
 else
-	cp /vagrant/mattermost-5.13.2-linux.amd64.tar.gz ./	
+	cp /vagrant/mattermost_archives/mattermost-5.16.0-rc3-linux-amd64.tar ./	
 fi
 
 tar -xzf mattermost*.gz

@@ -9,7 +9,7 @@
   "SqlSettings": {
     "DriverName": "mysql",
     "DataSource": "mmuser:really_secure_password@tcp(nginx:3306)/mattermost?charset=utf8mb4,utf8\u0026readTimeout=30s\u0026writeTimeout=30s",
-    "DataSourceReplicas": [],
+    "DataSourceReplicas": ["mmuser:really_secure_password@tcp(mysql0:3306)/mattermost?charset=utf8mb4,utf8\u0026readTimeout=30s\u0026writeTimeout=30s","mmuser:really_secure_password@tcp(mysql1:3306)/mattermost?charset=utf8mb4,utf8\u0026readTimeout=30s\u0026writeTimeout=30s"],
     "DataSourceSearchReplicas": [],
     "MaxIdleConns": 20,
     "ConnMaxLifetimeMilliseconds": 3600000,
