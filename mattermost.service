@@ -4,6 +4,7 @@ After=network.target
 
 [Service]
 Type=notify
+EnvironmentFile=/opt/mattermost/config/mm.environment
 ExecStart=/opt/mattermost/bin/mattermost
 TimeoutStartSec=3600
 Restart=always

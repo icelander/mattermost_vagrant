@@ -1,5 +1,7 @@
-# Mattermost Clustering
+# Mattermost Cluster Vagrant File
 
 ## TODO
 
-Finish this
+ - [x] Add app and job servers
+ - [ ] Add LDAP server
+ - [x] Auto-config the DB

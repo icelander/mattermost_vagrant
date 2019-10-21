@@ -1,23 +1,35 @@
 #!/bin/bash
+echo "Provisioning with these arguments:"
+echo $@
 
-cat /vagrant/hosts >> /etc/hosts
+mattermost_version=$1
+type=$2
+ip_address=$3
 
-apt-get -q -y update > /dev/null
-apt-get -q -y install jq cifs-utils
+if [[ -z "$type" ]]; then
+	type="mattermost"
+fi
 
-mkdir -p /media/mmst-data
-cat /vagrant/client_fstab >> /etc/fstab
-mount -a
+if [[ ! -d /media/mmst-data ]]; then
+	cat /vagrant/hosts >> /etc/hosts
 
-# cat /vagrant/hosts >> /etc/hosts
+	apt-get -q -y update > /dev/null
+	apt-get -q -y install jq cifs-utils
+
+	mkdir -p /media/mmst-data
+	cat /vagrant/client_fstab >> /etc/fstab
+	mount -a
+fi
 
 # Download Mattermost
-if [ ! -f /vagrant/mattermost_archives/mattermost-5.16.0-rc3-linux-amd64.tar ]; then
-    wget --quiet https://releases.mattermost.com/5.13.2/mattermost-5.13.2-linux-amd64.tar.gz
-    cp mattermost-5.13.2-linux-amd64.tar.gz /vagrant/mattermost_archives/mattermost-5.16.0-rc3-linux-amd64.tar
+if [ ! -f /vagrant/mattermost_archives/mattermost-$mattermost_version-linux-amd64.tar.gz ]; then
+    wget --quiet https://releases.mattermost.com/$mattermost_version/mattermost-$mattermost_version-linux-amd64.tar.gz
+    cp mattermost-$mattermost_version-linux-amd64.tar.gz /vagrant/mattermost_archives/mattermost-$mattermost_version-linux-amd64.tar.gz
 else
-	cp /vagrant/mattermost_archives/mattermost-5.16.0-rc3-linux-amd64.tar ./	
+	cp /vagrant/mattermost_archives/mattermost-$mattermost_version-linux-amd64.tar.gz ./	
 fi
+
+rm -rf /opt/mattermost
 
 tar -xzf mattermost*.gz
 rm mattermost*.gz
@@ -25,20 +37,31 @@ mv mattermost /opt
 
 mkdir /opt/mattermost/data
 
-ln -s /vagrant/license.txt /opt/mattermost/license.txt
+ln -s /vagrant/e20license.txt /opt/mattermost/license.txt
 mv /opt/mattermost/config/config.json /opt/mattermost/config/config.orig.json
 
-jq -s '.[0] * .[1]' /opt/mattermost/config/config.orig.json /vagrant/config.json > /vagrant/config.vagrant.json
+jq -s '.[0] * .[1]' /opt/mattermost/config/config.orig.json /vagrant/config.json > /tmp/config.vagrant.json
 
-chmod 777 /vagrant/config.vagrant.json
+# Add DB config
+jq -s '.[0] * .[1]' /tmp/config.vagrant.json /vagrant/db_config.json > ./config.json
 
-cp /vagrant/config.vagrant.json /opt/mattermost/config/config.json
+cp ./config.json /opt/mattermost/config/config.json
 
 useradd --system --user-group mattermost
 chown -R mattermost:mattermost /opt/mattermost
 chmod -R g+w /opt/mattermost
 
+if [[ $type == "job" ]]; then
+	cp /vagrant/mattermost_job_server.env /opt/mattermost/config/mm.environment
+elif [[ $type == "app" ]]; then
+	cp /vagrant/mattermost_app_server.env /opt/mattermost/config/mm.environment
+	echo "MM_CLUSTERSETTINGS_OVERRIDEHOSTNAME=\"$ip_address\"" >> /opt/mattermost/config/mm.environment
+else
+	echo '' > /opt/mattermost/config/mm.environment
+fi
+
 cp /vagrant/mattermost.service /lib/systemd/system/mattermost.service
+
 systemctl daemon-reload
 /opt/mattermost/bin/mattermost version
 

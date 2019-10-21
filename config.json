@@ -8,8 +8,8 @@
   },
   "SqlSettings": {
     "DriverName": "mysql",
-    "DataSource": "mmuser:really_secure_password@tcp(nginx:3306)/mattermost?charset=utf8mb4,utf8\u0026readTimeout=30s\u0026writeTimeout=30s",
-    "DataSourceReplicas": ["mmuser:really_secure_password@tcp(mysql0:3306)/mattermost?charset=utf8mb4,utf8\u0026readTimeout=30s\u0026writeTimeout=30s","mmuser:really_secure_password@tcp(mysql1:3306)/mattermost?charset=utf8mb4,utf8\u0026readTimeout=30s\u0026writeTimeout=30s"],
+    "DataSource": "",
+    "DataSourceReplicas": [],
     "DataSourceSearchReplicas": [],
     "MaxIdleConns": 20,
     "ConnMaxLifetimeMilliseconds": 3600000,
@@ -52,7 +52,7 @@
   "ClusterSettings": {
     "Enable": true,
     "ClusterName": "Buster",
-    "OverrideHostname": "",
+    "OverrideHostname": "#IP_ADDRESS#",
     "UseIpAddress": false,
     "UseExperimentalGossip": false,
     "ReadOnlyConfig": false,
@@ -82,5 +82,12 @@
           "SmtpPassword": "",
           "EmailAddress": ""
       }
+  },
+  "PasswordSettings": {
+    "MinimumLength": 5,
+    "Lowercase": false,
+    "Number": false,
+    "Uppercase": false,
+    "Symbol": false
   }
 }
