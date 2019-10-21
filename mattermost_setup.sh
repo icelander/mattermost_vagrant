@@ -40,10 +40,8 @@ mkdir /opt/mattermost/data
 ln -s /vagrant/e20license.txt /opt/mattermost/license.txt
 mv /opt/mattermost/config/config.json /opt/mattermost/config/config.orig.json
 
-jq -s '.[0] * .[1]' /opt/mattermost/config/config.orig.json /vagrant/config.json > /tmp/config.vagrant.json
-
 # Add DB config
-jq -s '.[0] * .[1]' /tmp/config.vagrant.json /vagrant/db_config.json > ./config.json
+jq -s '.[0] * .[1]' /opt/mattermost/config/config.orig.json /vagrant/instance_config.json > ./config.json
 
 cp ./config.json /opt/mattermost/config/config.json
 

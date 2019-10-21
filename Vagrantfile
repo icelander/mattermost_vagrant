@@ -15,11 +15,17 @@ JOB_SERVER_PREFIX = 'mattermostjob'
 MYSQL_ROOT_PASSWORD = 'root'
 MATTERMOST_PASSWORD = 'really_secure_password'
 
-# mmuser:really_secure_password@tcp(nginx:3306)/mattermost?charset=utf8mb4,utf8\u0026readTimeout=30s\u0026writeTimeout=30s
+ENABLE_LDAP = true
+
 def generate_sql_uri(host, password)
   return "mmuser:#{password}@tcp(#{host}:3306)/mattermost?charset=utf8mb4,utf8&readTimeout=30s&writeTimeout=30s"
 end
 
+config_json = File.read('config.json')
+@instance_config = JSON.parse(config_json)
+@instance_config["SqlSettings"] = {"DataSource" => generate_sql_uri(MASTER_HOSTNAME, MATTERMOST_PASSWORD), "DataSourceReplicas" => [], "DataSourceSearchReplicas" => []}
+
+# mmuser:really_secure_password@tcp(nginx:3306)/mattermost?charset=utf8mb4,utf8\u0026readTimeout=30s\u0026writeTimeout=30s
 
 # Override the default router https://www.vagrantup.com/docs/networking/public_network.html#default-router
 Vagrant.configure("2") do |config|
@@ -29,15 +35,11 @@ Vagrant.configure("2") do |config|
 	hosts = Array.new
 	hosts << "#{MASTER_IP}   #{MASTER_HOSTNAME}"
 
-  db_config = {"SqlSettings" => {"DataSource" => generate_sql_uri(MASTER_HOSTNAME, MATTERMOST_PASSWORD), "DataSourceReplicas" => [], "DataSourceSearchReplicas" => []}}
-
   config.vm.define MASTER_HOSTNAME do |box|
 		box.vm.hostname = MASTER_HOSTNAME
 		box.vm.network :private_network, ip: MASTER_IP
 		box.vm.network "forwarded_port", guest: 3306, host: 23306
 		box.vm.network "forwarded_port", guest: 80, host: 8080
-
-		setup_script = File.read('setup.sh')
 
 		nginx_hosts_file = File.open('nginx_hosts', 'w')
 		nginx_hosts_file.write("upstream backend {\n")
@@ -47,8 +49,16 @@ Vagrant.configure("2") do |config|
 		nginx_hosts_file.write("}\n\n")
 		nginx_hosts_file.close
 
-		box.vm.provision :shell, inline: setup_script
+    if ENABLE_LDAP
+      box.vm.provision "docker" do |d|
+        d.pull_images "rroemhild/test-openldap"
+        d.run "rroemhild/test-openldap",
+          args: "--privileged -d -p 389:389"
+      end
+      @instance_config['LdapSettings']['Enable'] = true
+    end
 
+		box.vm.provision :shell, path: 'setup.sh'
 		box.vm.provision :shell, path: 'replication-setup.sh', run: 'always'
 	end
 
@@ -59,7 +69,7 @@ Vagrant.configure("2") do |config|
 		box_hostname = "#{MYSQL_REPLICA_PREFIX}#{index}"
 		hosts << "#{node_ip}   #{box_hostname}"
 
-    db_config['SqlSettings']['DataSourceReplicas'].push(generate_sql_uri(box_hostname, MATTERMOST_PASSWORD))
+    @instance_config['SqlSettings']['DataSourceReplicas'].push(generate_sql_uri(box_hostname, MATTERMOST_PASSWORD))
 		
 		config.vm.define box_hostname do |box|
 			box.vm.hostname = box_hostname
@@ -74,8 +84,8 @@ Vagrant.configure("2") do |config|
 		end
 	end
 
-  data_config = db_config.to_json
-  f = File.open('db_config.json', 'w')
+  data_config = @instance_config.to_json
+  f = File.open('instance_config.json', 'w')
   f.write(data_config.gsub("&", "\\u0026"))
   f.close
 
