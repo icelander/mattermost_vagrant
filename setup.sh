@@ -1,27 +1,19 @@
 #!/bin/bash
 
-echo "Updating and Upgrading"
-apt-get -qq -y update > /dev/null
-apt-get -qq -y upgrade > /dev/null
+mattermost_version=$1
+root_password=$2
+mysql_password=$3
 
-export DEBIAN_FRONTEND=noninteractive
-debconf-set-selections <<< 'mariadb-server-10.0 mysql-server/root_password password #MYSQL_ROOT_PASSWORD'
-debconf-set-selections <<< 'mariadb-server-10.0 mysql-server/root_password_again password #MYSQL_ROOT_PASSWORD'
-echo "Installing MariaDB, Docker, and ldapscripts"
-apt-get install -y -q mariadb-server docker.io ldapscripts > /dev/null
+apt-get -qq -y update
+apt-get install -y -q mariadb-client ldapscripts jq
 
-
-echo 'Setting up Test LDAP'
-docker pull rroemhild/test-openldap
-docker run --privileged -d -p 389:389 rroemhild/test-openldap
-
-sed -i 's/MATTERMOST_PASSWORD/#MATTERMOST_PASSWORD/' /vagrant/db_setup.sql
-echo "Setting up database"
-mysql -uroot -p#MYSQL_ROOT_PASSWORD < /vagrant/db_setup.sql
+cat /vagrant/db_setup.sql | sed "s/MATTERMOST_PASSWORD/$mysql_password/" > /tmp/db_setup.sql
+mysql -h127.0.0.1 -uroot -p$root_password < /tmp/db_setup.sql
+rm /tmp/db_setup.sql
 
 rm -rf /opt/mattermost
 
-wget --quiet https://releases.mattermost.com/5.2.1/mattermost-5.2.1-linux-amd64.tar.gz
+wget --quiet "https://releases.mattermost.com/$mattermost_version/mattermost-$mattermost_version-linux-amd64.tar.gz"
 
 tar -xzf mattermost*.gz
 
@@ -29,12 +21,13 @@ rm mattermost*.gz
 mv mattermost /opt
 
 mkdir /opt/mattermost/data
-rm /opt/mattermost/config/config.json
 
-cp /vagrant/license.txt /opt/mattermost/license.txt
+cp /vagrant/e20license.txt /opt/mattermost/config/license.txt
 
-sed -i -e 's/mostest/#MATTERMOST_PASSWORD/g' /vagrant/config.json
-ln -s /vagrant/config.json /opt/mattermost/config/config.json
+mv /opt/mattermost/config/config.json /opt/mattermost/config/config.orig.json
+cat /vagrant/config.json | sed "s/MATTERMOST_PASSWORD/$mysql_password/g" > /tmp/config.json
+jq -s '.[0] * .[1]' /opt/mattermost/config/config.orig.json /tmp/config.json > /opt/mattermost/config/config.json
+rm /tmp/config.json
 
 useradd --system --user-group mattermost
 chown -R mattermost:mattermost /opt/mattermost
@@ -44,14 +37,11 @@ cp /vagrant/mattermost.service /lib/systemd/system/mattermost.service
 systemctl daemon-reload
 
 cd /opt/mattermost
-# bin/mattermost user create --email admin@planetexpress.com --username admin --password admin
-# bin/mattermost team create --name planet-express --display_name "Planet Express" --email "professor@planetexpress.com"
-# bin/mattermost team add planet-express admin@planetexpress.com
+bin/mattermost user create --email admin@planetexpress.com --username admin --password admin --system_admin
+bin/mattermost team create --name planet-express --display_name "Planet Express" --email "professor@planetexpress.com"
+bin/mattermost team add planet-express admin@planetexpress.com
 
-service mysql start
 service mattermost start
-
-# IP_ADDR=`/sbin/ifconfig eth0 | grep 'inet addr' | cut -d: -f2 | awk '{print $1}'`
 
 printf '=%.0s' {1..80}
 echo 
