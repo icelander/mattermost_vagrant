@@ -1,10 +1,11 @@
 {
     "ServiceSettings": {
         "SiteURL": "http://127.0.0.1:8065",
-        "LicenseFileLocation": "/opt/mattermost/config/license.txt"
+        "LicenseFileLocation": "/opt/mattermost/config/license.txt",
+        "AllowedUntrustedInternalConnections": "127.0.0.1, localhost"
     },
     "TeamSettings": {
-        "SiteName": "SAML w/ LDAP Site"
+        "SiteName": "Mattermost"
     },
     "SqlSettings": {
         "DriverName": "mysql",
@@ -57,6 +58,6 @@
         "LoginButtonColor": "",
         "LoginButtonBorderColor": "",
         "LoginButtonTextColor": "",
-        "Trace": false
+        "Trace": true
     }
 }

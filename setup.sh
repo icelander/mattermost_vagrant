@@ -22,8 +22,6 @@ mv mattermost /opt
 
 mkdir /opt/mattermost/data
 
-cp /vagrant/e20license.txt /opt/mattermost/config/license.txt
-
 mv /opt/mattermost/config/config.json /opt/mattermost/config/config.orig.json
 cat /vagrant/config.json | sed "s/MATTERMOST_PASSWORD/$mysql_password/g" > /tmp/config.json
 jq -s '.[0] * .[1]' /opt/mattermost/config/config.orig.json /tmp/config.json > /opt/mattermost/config/config.json
@@ -37,9 +35,13 @@ cp /vagrant/mattermost.service /lib/systemd/system/mattermost.service
 systemctl daemon-reload
 
 cd /opt/mattermost
-bin/mattermost user create --email admin@planetexpress.com --username admin --password admin --system_admin
-bin/mattermost team create --name planet-express --display_name "Planet Express" --email "professor@planetexpress.com"
-bin/mattermost team add planet-express admin@planetexpress.com
+# if [[ -f /vagrant/e20license.txt ]]; then
+# 	echo "Installing E20 License"
+# 	bin/mattermost license upload /vagrant/e20license.txt
+# fi
+# bin/mattermost user create --email admin@planetexpress.com --username admin --password admin --system_admin
+# bin/mattermost team create --name planet-express --display_name "Planet Express" --email "professor@planetexpress.com"
+# bin/mattermost team add planet-express admin@planetexpress.com
 
 service mattermost start
 
