@@ -1,12 +1,10 @@
 [Unit]
 Description=Mattermost
 After=network.target
-After=postgresql.service
-Requires=postgresql.service
 
 [Service]
 Type=notify
-ExecStart=/opt/mattermost/bin/mattermost
+ExecStart=/opt/mattermost/bin/mattermost server
 TimeoutStartSec=3600
 Restart=always
 RestartSec=10
@@ -16,4 +14,3 @@ Group=mattermost
 LimitNOFILE=49152
 
 [Install]
-WantedBy=postgresql.service

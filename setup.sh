@@ -1,25 +1,27 @@
 #!/bin/bash
 
-rm /vagrant/config.vagrant.json
+mattermost_version=$1
+root_password=$2
+mysql_password=$3
 
-apt-get -qq update > /dev/null
+apt-get -qq -y update
+apt-get install -y -q mariadb-client ldapscripts jq xmlsec1
 
-apt-get install -y -q postgresql postgresql-contrib jq
+archive_filename="mattermost-$mattermost_version-linux-amd64.tar.gz"
+archive_path="/vagrant/mattermost_archives/$archive_filename"
+archive_url="https://releases.mattermost.com/$mattermost_version/$archive_filename"
 
+if [[ ! -f $archive_path ]]; then
+	wget --quiet $archive_url -O $archive_path
+fi
 
-# sudo su postgres -c "createdb -E UTF8 -T template0 --locale=en_US.utf8 -O vagrant wtm"
-cp /etc/postgresql/10/main/pg_hba.conf /etc/postgresql/10/main/pg_hba.orig.conf
-cp /vagrant/pg_hba.conf /etc/postgresql/10/main/pg_hba.conf
+if [[ ! -f $archive_path ]]; then
+	echo "Could not find archive file, aborting"
+	echo "Path: $archive_path"
+	exit 1
+fi
 
-cp /etc/postgresql/10/main/postgresql.conf /etc/postgresql/10/main/postgresql.orig.conf
-cp /vagrant/postgresql.conf /etc/postgresql/10/main/postgresql.conf
-
-sudo systemctl reload postgresql
-
-cp /vagrant/db_setup.sql /tmp/db_setup.sql
-echo "Setting up database"
-su postgres -c "psql -f /tmp/db_setup.sql"
-rm /tmp/db_setup.sql
+cp $archive_path ./
 
 rm -rf /opt/mattermost
 echo "Downloading Mattermost"
@@ -34,29 +36,32 @@ mv mattermost /opt
 
 mkdir /opt/mattermost/data
 
-echo "Copying Config File"
 mv /opt/mattermost/config/config.json /opt/mattermost/config/config.orig.json
-# Edit config file with JQ
-jq -s '.[0] * .[1]' /opt/mattermost/config/config.orig.json /vagrant/config.json > /opt/mattermost/config/config.json
+cat /vagrant/config.json | sed "s/MATTERMOST_PASSWORD/$mysql_password/g" > /tmp/config.json
+jq -s '.[0] * .[1]' /opt/mattermost/config/config.orig.json /tmp/config.json > /opt/mattermost/config/config.json
+rm /tmp/config.json
 
-cp /opt/mattermost/config/config.json /vagrant/config.vagrant.json
-ln -s /vagrant/e20license.txt /opt/mattermost/license.txt
-
-echo "Creating Mattermost User"
 useradd --system --user-group mattermost
 chown -R mattermost:mattermost /opt/mattermost
 chmod -R g+w /opt/mattermost
 
-ln -s /vagrant/mattermost.service /lib/systemd/system/mattermost.service
+cp /vagrant/mattermost.service /lib/systemd/system/mattermost.service
 systemctl daemon-reload
 
-echo "Starting PostgreSQL"
-service postgresql start
-
 cd /opt/mattermost
-bin/mattermost version
+if [[ -f /vagrant/e20license.txt ]]; then
+	echo "Installing E20 License"
+	bin/mattermost license upload /vagrant/e20license.txt
+fi
 bin/mattermost user create --email admin@planetexpress.com --username admin --password admin --system_admin
-bin/mattermost sampledata --seed 10 --teams 4 --users 30
+bin/mattermost team create --name planet-express --display_name "Planet Express" --email "professor@planetexpress.com"
+bin/mattermost team add planet-express admin@planetexpress.com
 
-echo "Starting Mattermost!"
 service mattermost start
+
+printf '=%.0s' {1..80}
+echo 
+echo '                     VAGRANT UP!'
+echo "GO TO http://127.0.0.1:8065 and log in with \`professor\`"
+echo
+printf '=%.0s' {1..80}

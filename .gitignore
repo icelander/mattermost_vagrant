@@ -1,8 +1,8 @@
 .vagrant
-
 .DS_Store
 mattermost*.gz
 config.vagrant.json
 license.txt
 e10license.txt
 e20license.txt
+mattermost_archives/
