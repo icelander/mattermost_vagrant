@@ -13,7 +13,21 @@ rm /tmp/db_setup.sql
 
 rm -rf /opt/mattermost
 
-wget --quiet "https://releases.mattermost.com/$mattermost_version/mattermost-$mattermost_version-linux-amd64.tar.gz"
+archive_filename="mattermost-$mattermost_version-linux-amd64.tar.gz"
+archive_path="/vagrant/mattermost_archives/$archive_filename"
+archive_url="https://releases.mattermost.com/$mattermost_version/$archive_filename"
+
+if [[ ! -f $archive_path ]]; then
+	wget --quiet $archive_url -O $archive_path
+fi
+
+if [[ ! -f $archive_path ]]; then
+	echo "Could not find archive file, aborting"
+	echo "Path: $archive_path"
+	exit 1
+fi
+
+cp $archive_path ./
 
 tar -xzf mattermost*.gz
 
@@ -35,13 +49,13 @@ cp /vagrant/mattermost.service /lib/systemd/system/mattermost.service
 systemctl daemon-reload
 
 cd /opt/mattermost
-# if [[ -f /vagrant/e20license.txt ]]; then
-# 	echo "Installing E20 License"
-# 	bin/mattermost license upload /vagrant/e20license.txt
-# fi
-# bin/mattermost user create --email admin@planetexpress.com --username admin --password admin --system_admin
-# bin/mattermost team create --name planet-express --display_name "Planet Express" --email "professor@planetexpress.com"
-# bin/mattermost team add planet-express admin@planetexpress.com
+if [[ -f /vagrant/e20license.txt ]]; then
+	echo "Installing E20 License"
+	bin/mattermost license upload /vagrant/e20license.txt
+fi
+bin/mattermost user create --email admin@planetexpress.com --username admin --password admin --system_admin
+bin/mattermost team create --name planet-express --display_name "Planet Express" --email "professor@planetexpress.com"
+bin/mattermost team add planet-express admin@planetexpress.com
 
 service mattermost start
 

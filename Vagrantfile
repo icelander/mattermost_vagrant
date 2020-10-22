@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-MATTERMOST_VERSION = "5.23.0"
+MATTERMOST_VERSION = "guest-ldap-test"
 
 MYSQL_ROOT_PASSWORD = 'mysql_root_password'
 MATTERMOST_PASSWORD = 'really_secure_password'
@@ -22,9 +22,9 @@ Vagrant.configure("2") do |config|
   config.vm.hostname = 'mattermost'
 
   config.vm.provision "docker" do |d|
-    # d.run 'ldap',
-    #   image: 'rroemhild/test-openldap',
-    #   args: "-p 389:389"
+    d.run 'ldap',
+      image: 'rroemhild/test-openldap',
+      args: "-p 389:389"
     d.run 'mariadb', 
       args: "-p 3306:3306\
              -e MYSQL_ROOT_PASSWORD=#{MYSQL_ROOT_PASSWORD}"
