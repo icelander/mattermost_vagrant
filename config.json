@@ -1,11 +1,12 @@
 {
     "ServiceSettings": {
-        "SiteURL": "http://127.0.0.1:8065",
+        "SiteURL": "http://mattermost.planex.com",
         "LicenseFileLocation": "/opt/mattermost/config/license.txt",
         "AllowedUntrustedInternalConnections": "127.0.0.1, localhost"
     },
     "TeamSettings": {
-        "SiteName": "Mattermost"
+        "SiteName": "Planex Mattermost",
+        "MaxUsersPerTeam": 10000
     },
     "SqlSettings": {
         "DriverName": "mysql",
@@ -26,38 +27,27 @@
         "FileLevel": "DEBUG",
         "FileJson": false
     },
-    "LdapSettings": {
-        "Enable": true,
-        "EnableSync": true,
-        "LdapServer": "127.0.0.1",
-        "LdapPort": 389,
-        "ConnectionSecurity": "",
-        "BaseDN": "ou=people,dc=planetexpress,dc=com",
-        "BindUsername": "cn=admin,dc=planetexpress,dc=com",
-        "BindPassword": "GoodNewsEveryone",
-        "UserFilter": "(objectClass=inetOrgPerson)",
-        "GroupFilter": "(objectClass=Group)",
-        "GuestFilter": "",
-        "EnableAdminFilter": true,
-        "AdminFilter": "(\u0026(objectClass=inetOrgPerson)(memberof=cn=admin_staff,ou=people,dc=planetexpress,dc=com))",
-        "GroupDisplayNameAttribute": "cn",
-        "GroupIdAttribute": "cn",
-        "FirstNameAttribute": "cn",
-        "LastNameAttribute": "sn",
-        "EmailAttribute": "mail",
-        "UsernameAttribute": "employeeType",
-        "NicknameAttribute": "givenName",
-        "IdAttribute": "uid",
-        "PositionAttribute": "ou",
-        "LoginIdAttribute": "uid",
-        "SyncIntervalMinutes": 60,
-        "SkipCertificateVerification": false,
-        "QueryTimeout": 60,
-        "MaxPageSize": 2000,
-        "LoginFieldName": "Planet Express Username",
-        "LoginButtonColor": "",
-        "LoginButtonBorderColor": "",
-        "LoginButtonTextColor": "",
-        "Trace": true
+    "ElasticsearchSettings": {
+        "ConnectionUrl": "http://elastic.planex.com",
+        "Username": "",
+        "Password": "",
+        "EnableIndexing": true,
+        "EnableSearching": true,
+        "EnableAutocomplete": true,
+        "Sniff": false,
+        "PostIndexReplicas": 1,
+        "PostIndexShards": 1,
+        "ChannelIndexReplicas": 1,
+        "ChannelIndexShards": 1,
+        "UserIndexReplicas": 1,
+        "UserIndexShards": 1,
+        "AggregatePostsAfterDays": 365,
+        "PostsAggregatorJobStartTime": "03:00",
+        "IndexPrefix": "",
+        "LiveIndexingBatchSize": 1,
+        "BulkIndexingTimeWindowSeconds": 3600,
+        "RequestTimeoutSeconds": 30,
+        "SkipTLSVerification": true,
+        "Trace": "all"
     }
 }

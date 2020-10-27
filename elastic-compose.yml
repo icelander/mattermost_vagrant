@@ -1,0 +1,77 @@
+version: '2.2'
+services:
+  elastic1:
+    image: kiwicom/elasticsearch-icu:7.9.0
+    container_name: elastic1
+    environment:
+      - node.name=elastic1
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=elastic2,elastic3
+      - cluster.initial_master_nodes=elastic1,elastic2,elastic3
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data01:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+      - 9300:9300
+    networks:
+      - elastic
+  elastic2:
+    image: kiwicom/elasticsearch-icu:7.9.0
+    container_name: elastic2
+    environment:
+      - node.name=elastic2
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=elastic1,elastic3
+      - cluster.initial_master_nodes=elastic1,elastic2,elastic3
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - 9201:9200
+      - 9301:9300
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data02:/usr/share/elasticsearch/data
+    networks:
+      - elastic
+  elastic3:
+    image: kiwicom/elasticsearch-icu:7.9.0
+    container_name: elastic3
+    environment:
+      - node.name=elastic3
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=elastic1,elastic2
+      - cluster.initial_master_nodes=elastic1,elastic2,elastic3
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - 9202:9200
+      - 9302:9300
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data03:/usr/share/elasticsearch/data
+    networks:
+      - elastic
+
+volumes:
+  data01:
+    driver: local
+  data02:
+    driver: local
+  data03:
+    driver: local
+
+networks:
+  elastic:
+    driver: bridge
