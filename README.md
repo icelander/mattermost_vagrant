@@ -1,21 +1,26 @@
-# LDAP Server
+# Elasticsearch Cluster
 
-## About
+## Problem
 
-Spins up a Mattermost server at http://127.0.0.1:8065 that includes LDAP sync and eventually SAML login to demonstrate 
+You need to run Elasticsearch behind and SSL proxy in Mattermost
 
-## To Do
+## Solution
 
-- [ ] Get SimpleSAMLphp working
-- [ ] SimpleSAMLphp auth against LDAP docker container
-- [ ] SAML Login with full security
-- [ ] Profile Images
+1. Set up a three-server Elasticsearch cluster
+2. Set up a TLS Nginx proxy for elastic.planex.com that balances between the three servers
+2. Connect Mattermost to the nginx proxy for Elasticsearch
+	
 
-## Test Scenarios
+	|                   | Verify TLS True | Verify TLS False |
+	|:------------------|:----------------|:-----------------|
+	| Cert in store     |                 |                  |
+	| Cert not in store |                 |                  |
 
-1. User in SAML, not in LDAP
-	- Sync w/ SAML
-	- Sync LDAP
-2. User in SAML and LDAP
-	- Sync with SAML enabled
-	- Sync w/ LDAP enabled
+## Discussion
+
+## Architecture
+
+Nginx Proxy
+ - search.planex.com
+ 	- Three docker images on separate ports
+ - mattermost.planex.com
