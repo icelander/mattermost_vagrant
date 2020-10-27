@@ -22,7 +22,7 @@ else
 	mkdir /etc/ssl/$domain
 	cd /etc/ssl/$domain
 
-	openssl genrsa -out $domain.key 2048
+	openssl genrsa -out $domain.key 4096
 	openssl req -new -key $domain.key \
 					 -out $domain.csr \
 					 -subj "/C=$country/ST=$state/L=$city/O=$org/CN=*.$domain/emailAddress=$email"
